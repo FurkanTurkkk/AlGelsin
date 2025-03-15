@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auth_db
+    username: postgres
+    password: 123321
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+secret:
+  key: W9Eh9YZQKqSZuxQfgq68L+YRRJRyrn4i+QCdffMiMwXuNAycxUPBFw4C4rMkEgQ/+XhwRn2kTdZkyR70gGSroOAYwzXswihIaeMpLGNMcStZcAGwChwgIVg7hQrDMRRbq74l798+EO5qhVTeX/AlBvFEhm/m81P/RluPfg+kTUNSnXHPGbmUkODZ8sDxOlHkTK98H1V3FFjUjF6gif3lJNO/n0mB+uoX4cwjhHCZQHpONC5DKTNB3FyT7Xf0aoovxNDpMmXBpUKI0nm5zGAttdDOPeevZVdOS5oTfw+a2h5xW0zKSk5hjN35eRTLkGnJb5MC7YCIjWP9z4ELek+npA==
