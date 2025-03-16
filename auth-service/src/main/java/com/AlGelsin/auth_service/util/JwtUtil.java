@@ -29,26 +29,6 @@ public class JwtUtil {
         return token;
     }
 
-    public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSecretKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            return !isTokenExpired(token);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private Key getSecretKey() {
         return Keys.hmacShaKeyFor(secretKeyString.getBytes());
     }

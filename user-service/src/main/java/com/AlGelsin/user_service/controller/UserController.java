@@ -28,8 +28,13 @@ public class UserController {
             @RequestBody UpdateUserRequestDto request) {
         userService.updateUser(authId,request);
 
-        System.out.println("🔥 Backend'e Gelen Auth-Id: " + authId); // Debug için
+        System.out.println("Backend'e Gelen Auth-Id: " + authId); // Debug için
 
-        return ResponseEntity.ok("✅ User updated successfully with Auth-Id: " + authId);
+        return ResponseEntity.ok("User updated successfully with Auth-Id: " + authId);
+    }
+
+    @GetMapping
+    public ResponseEntity<String> getUserIdByAuthId(@RequestHeader("Auth-Id")Long authId){
+        return ResponseEntity.ok(userService.getUserIdByAuthId(authId));
     }
 }

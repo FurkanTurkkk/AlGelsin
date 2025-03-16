@@ -4,6 +4,7 @@ import com.AlGelsin.product_service.converter.ProductDtoConverter;
 import com.AlGelsin.product_service.dto.CreateProductRequestDto;
 import com.AlGelsin.product_service.dto.CreateStockRequestDto;
 import com.AlGelsin.product_service.exception.ProductAlreadyExistException;
+import com.AlGelsin.product_service.exception.ProductNotFoundException;
 import com.AlGelsin.product_service.feignclient.StockFeignClient;
 import com.AlGelsin.product_service.model.Product;
 import com.AlGelsin.product_service.repository.ProductRepository;
@@ -11,6 +12,7 @@ import org.AlGelsin.ProductDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,11 @@ public class ProductService {
                 .toList();
     }
 
+    public BigDecimal getProductPrice(String productId) {
+        Product product=checkByIdForGetProduct(productId);
+        return product.getPrice();
+    }
+
     private void checkByNameForCreateProduct(String name) {
         Optional<Product> product = productRepository.findByName(name);
         if(product.isPresent()){
@@ -54,5 +61,15 @@ public class ProductService {
         }
     }
 
+    private Product checkByIdForGetProduct(String productId){
+        Optional<Product> product = productRepository.findById(productId);
+        if(product.isEmpty()){
+            throw new ProductNotFoundException("Product could not found by id : "+productId);
+        }
+        return product.get();
+    }
 
+    public ProductDto getProductById(String productId) {
+        return converter.convert(productRepository.findById(productId).get());
+    }
 }

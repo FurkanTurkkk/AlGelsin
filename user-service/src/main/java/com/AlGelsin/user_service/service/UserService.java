@@ -54,4 +54,8 @@ public class UserService {
                 .orElseThrow(()->new UserNotFoundByAuthIdException("User can not found by auth id "));
     }
 
+    public String getUserIdByAuthId(Long authId) {
+        Optional<User> user = userRepository.findByAuthId(authId);
+        return user.get().getId();
+    }
 }

@@ -7,6 +7,7 @@ import org.AlGelsin.ProductDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,16 @@ public class ProductController {
     @PostMapping("/create")
     public ResponseEntity<String> createProduct(@Valid @RequestBody CreateProductRequestDto request){
         return ResponseEntity.ok(productService.createProduct(request));
+    }
+
+    @GetMapping("/product-price/{product-id}")
+    public BigDecimal getProductPrice(@PathVariable("product-id") String productId){
+        return productService.getProductPrice(productId);
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<ProductDto> getProductById(@RequestParam String productId){
+        return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @GetMapping("/product-list/{category-id}/get")

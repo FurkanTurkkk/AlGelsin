@@ -1,4 +1,6 @@
+org/AlGelsin/CartItemDto.class
 org/AlGelsin/CategoryDto.class
 org/AlGelsin/ProductDto.class
 org/AlGelsin/StockDto.class
 org/AlGelsin/UserDto.class
+org/AlGelsin/CartDto.class

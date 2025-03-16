@@ -15,6 +15,7 @@ public class Auth {
     private String surname;
     private String username;
     private String password;
+    private boolean isAdmin = false;
 
     private LocalDate createdAt;
 
@@ -46,6 +47,10 @@ public class Auth {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
     public LocalDate getCreatedAt() {

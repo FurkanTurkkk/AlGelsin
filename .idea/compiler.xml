@@ -8,11 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="stock-service" />
         <module name="auth-service" />
+        <module name="cart-service" />
         <module name="category-service" />
         <module name="AlGelsinSharedDto" />
         <module name="api-gateway" />
         <module name="product-service" />
         <module name="user-service" />
+        <module name="order-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -20,7 +22,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
+      <module name="cart-service" options="-parameters" />
       <module name="category-service" options="-parameters" />
+      <module name="order-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
       <module name="stock-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
