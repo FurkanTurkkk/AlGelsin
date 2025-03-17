@@ -3,6 +3,7 @@ package com.AlGelsin.auth_service.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Auth {
@@ -15,9 +16,10 @@ public class Auth {
     private String surname;
     private String username;
     private String password;
+    private LocalDateTime registrationDate;
+    private LocalDateTime LastLoginDate;
     private boolean isAdmin = false;
 
-    private LocalDate createdAt;
 
     public Auth(){}
 
@@ -26,7 +28,6 @@ public class Auth {
         this.surname = surname;
         this.username = username;
         this.password = password;
-        this.createdAt = LocalDate.now();
     }
 
     public Long getId(){
@@ -53,8 +54,20 @@ public class Auth {
         return isAdmin;
     }
 
-    public LocalDate getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getLastLoginDate() {
+        return LastLoginDate;
+    }
+
+    public void setLastLoginDate(LocalDateTime lastLoginDate) {
+        LastLoginDate = lastLoginDate;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 }
 

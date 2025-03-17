@@ -1,6 +1,7 @@
 package org.AlGelsin;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class UserDto {
 
@@ -10,7 +11,9 @@ public class UserDto {
     private String surname;
     private String phone;
     private String email;
+    private String tc;
     private LocalDate birthday;
+    private String addressId;
 
     public UserDto() {
     }
@@ -23,6 +26,25 @@ public class UserDto {
         this.phone = phone;
         this.email = email;
         this.birthday = birthday;
+    }
+
+    public UserDto(String id, Long authId,
+                   String name,
+                   String surname,
+                   String phone,
+                   String email,
+                   String tc,
+                   LocalDate birthday,
+                   String addressId) {
+        this.id = id;
+        this.authId = authId;
+        this.name = name;
+        this.surname = surname;
+        this.phone = phone;
+        this.email = email;
+        this.tc = tc;
+        this.birthday = birthday;
+        this.addressId = addressId;
     }
 
     public String getId() {
@@ -49,7 +71,15 @@ public class UserDto {
         return email;
     }
 
+    public String getTc() {
+        return tc;
+    }
+
     public LocalDate getBirthday() {
         return birthday;
+    }
+
+    public String getAddressId() {
+        return addressId;
     }
 }

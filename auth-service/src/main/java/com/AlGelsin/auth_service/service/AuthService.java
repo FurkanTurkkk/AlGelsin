@@ -1,5 +1,6 @@
 package com.AlGelsin.auth_service.service;
 
+import com.AlGelsin.auth_service.converter.AuthDtoConverter;
 import com.AlGelsin.auth_service.dto.CreateUserRequestDto;
 import com.AlGelsin.auth_service.dto.LoginRequestDto;
 import com.AlGelsin.auth_service.dto.RegisterRequestDto;
@@ -9,9 +10,11 @@ import com.AlGelsin.auth_service.feignclient.UserFeignClient;
 import com.AlGelsin.auth_service.model.Auth;
 import com.AlGelsin.auth_service.repository.AuthRepository;
 import com.AlGelsin.auth_service.util.JwtUtil;
+import org.AlGelsin.AuthDto;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,15 +26,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final UserFeignClient userFeignClient;
+    private final AuthDtoConverter converter;
 
     public AuthService(AuthRepository authRepository,
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil,
-                       UserFeignClient userFeignClient) {
+                       UserFeignClient userFeignClient, AuthDtoConverter converter) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.userFeignClient = userFeignClient;
+        this.converter = converter;
     }
 
     @Transactional
@@ -46,12 +51,14 @@ public class AuthService {
 
         checkUsernameForRegistration(request.getUsername());
 
-        Auth auth = authRepository.save(new Auth(
+        Auth auth = new Auth(
                 request.getName(),
                 request.getSurname(),
                 request.getUsername(),
-                passwordEncoder.encode(request.getPassword())
-        ));
+                request.getPassword()
+        );
+        auth.setRegistrationDate(LocalDateTime.now());
+        authRepository.save(auth);
 
         userFeignClient.createUser(new CreateUserRequestDto(
                 auth.getId(),
@@ -67,6 +74,7 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı."));
 
         if (passwordEncoder.matches(request.getPassword(), auth.getPassword())) {
+            auth.setLastLoginDate(LocalDateTime.now());
             return jwtUtil.generateToken(request.getUsername(), auth.getId());
         } else {
             throw new PasswordMismatchException("Geçersiz şifre.");
@@ -78,5 +86,10 @@ public class AuthService {
         if(auth.isPresent()){
             throw new UserAlreadyExistByUsername("Username already exist : "+username);
         }
+    }
+
+    public AuthDto getInformationById(Long authId) {
+        Auth auth = authRepository.findById(authId).get();
+        return converter.convert(auth);
     }
 }

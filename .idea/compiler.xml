@@ -10,6 +10,8 @@
         <module name="auth-service" />
         <module name="cart-service" />
         <module name="category-service" />
+        <module name="payment-service" />
+        <module name="address-service" />
         <module name="AlGelsinSharedDto" />
         <module name="api-gateway" />
         <module name="product-service" />
@@ -20,11 +22,13 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="address-service" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
       <module name="cart-service" options="-parameters" />
       <module name="category-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
       <module name="stock-service" options="-parameters" />
       <module name="user-service" options="-parameters" />

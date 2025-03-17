@@ -19,7 +19,7 @@ public class Cart {
     private String userId;
     private String orderId;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cart")
     List<CartItem> cartItemList = new ArrayList<>();
 
     public Cart(){

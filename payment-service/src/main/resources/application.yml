@@ -1,0 +1,12 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: payment-service
+
+iyzico:
+  api:
+    key: "sandbox-B1hcQfuNywDMqSBF75HrDTGUfmiJBvM3"
+    secret-key: "sandbox-xB9OLSWcaTYewQGPcKIa1R24o7KQSdWP"
+    base-url: "https://sandbox-api.iyzipay.com"

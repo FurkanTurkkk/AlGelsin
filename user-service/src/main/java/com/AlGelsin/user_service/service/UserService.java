@@ -58,4 +58,10 @@ public class UserService {
         Optional<User> user = userRepository.findByAuthId(authId);
         return user.get().getId();
     }
+
+    public UserDto getUserByAuthId(Long authId) {
+        Optional<User> user = userRepository.findByAuthId(authId);
+        return converter.convert(user.get());
+    }
+
 }

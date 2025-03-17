@@ -15,7 +15,9 @@ public class CartItemService {
     private final CartService cartService;
     private final FeignClientService feignClientService;
 
-    public CartItemService(CartItemRepository cartItemRepository, CartService cartService, FeignClientService feignClientService) {
+    public CartItemService(CartItemRepository cartItemRepository,
+                           CartService cartService,
+                           FeignClientService feignClientService) {
         this.cartItemRepository = cartItemRepository;
         this.cartService = cartService;
         this.feignClientService = feignClientService;
@@ -46,6 +48,7 @@ public class CartItemService {
         }
 
         cartService.calculateCartPrice(cart);
+
 
     }
 

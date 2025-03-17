@@ -33,6 +33,12 @@ public class UserController {
         return ResponseEntity.ok("User updated successfully with Auth-Id: " + authId);
     }
 
+
+    @GetMapping("/find-user")
+    public ResponseEntity<UserDto> getUserByAuthId(@RequestHeader("Auth-Id")Long authId){
+        return ResponseEntity.ok(userService.getUserByAuthId(authId));
+    }
+
     @GetMapping
     public ResponseEntity<String> getUserIdByAuthId(@RequestHeader("Auth-Id")Long authId){
         return ResponseEntity.ok(userService.getUserIdByAuthId(authId));

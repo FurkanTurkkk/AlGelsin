@@ -17,8 +17,8 @@ public class User {
     private String surname;
     private String phone;
     private String email;
+    private String tc;
     private LocalDate birthday;
-    private String addressId;
 
     public User(){
 
@@ -59,10 +59,6 @@ public class User {
         return birthday;
     }
 
-    public String getAddressId(){
-        return addressId;
-    }
-
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -71,7 +67,4 @@ public class User {
         this.birthday = birthday;
     }
 
-    public void setAddressId(String addressId){
-        this.addressId = addressId;
-    }
 }
