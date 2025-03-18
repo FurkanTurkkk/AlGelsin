@@ -22,11 +22,6 @@ public class FeignClientService {
         return productDto.getPrice();
     }
 
-    public String getProductNameByProductId(String productId){
-        ProductDto productDto = productFeignClient.getProductById(productId).getBody();
-        return productDto.getName();
-    }
-
     public String getUserIdByAuthId(Long authId){
         return userFeignClient.getUserIdByAuthId(authId).getBody();
     }

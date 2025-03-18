@@ -48,8 +48,6 @@ public class CartItemService {
         }
 
         cartService.calculateCartPrice(cart);
-
-
     }
 
     private BigDecimal calculateCartItemPrice(String productId, int quantity) {

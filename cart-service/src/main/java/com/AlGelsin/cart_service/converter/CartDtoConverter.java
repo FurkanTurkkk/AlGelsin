@@ -14,6 +14,7 @@ public class CartDtoConverter {
 
     public CartDto convert(Cart cart){
         return new CartDto(
+                cart.getId(),
                 cart.getTotalPrice(),
                 cart.getCartItemList().stream()
                         .map(converter::convert)

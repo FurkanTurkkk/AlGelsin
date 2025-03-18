@@ -2,17 +2,16 @@ package org.AlGelsin;
 
 import java.math.BigDecimal;
 
-public class CartItemDto {
+public class OrderItemDto {
 
     private String productId;
     private int quantity;
     private BigDecimal price;
 
-    public CartItemDto(){
-
+    public OrderItemDto() {
     }
 
-    public CartItemDto(String productId,int quantity,BigDecimal price){
+    public OrderItemDto(String productId, int quantity, BigDecimal price) {
         this.productId = productId;
         this.quantity = quantity;
         this.price = price;

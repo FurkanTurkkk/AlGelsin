@@ -20,10 +20,9 @@ public class PaymentController {
     }
 
     @PostMapping("/process")
-    public ResponseEntity<PaymentResponseDto> processPayment(@Valid @RequestBody PaymentRequestDto request,
+    public ResponseEntity<?> processPayment(@Valid @RequestBody PaymentRequestDto request,
                                                              @RequestHeader("Auth-Id")Long authId) {
-        logger.info("Received payment request for order: {}", request.getOrderId());
-        PaymentResponseDto response = paymentService.processPayment(request,authId);
-        return ResponseEntity.ok(response);
+        logger.info("Received payment request for order: {}");
+        return ResponseEntity.ok(paymentService.createPaymentRequestFromDto(request,authId));
     }
 }

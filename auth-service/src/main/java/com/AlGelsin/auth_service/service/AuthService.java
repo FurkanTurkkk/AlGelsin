@@ -55,7 +55,7 @@ public class AuthService {
                 request.getName(),
                 request.getSurname(),
                 request.getUsername(),
-                request.getPassword()
+                passwordEncoder.encode(request.getPassword())
         );
         auth.setRegistrationDate(LocalDateTime.now());
         authRepository.save(auth);
@@ -75,6 +75,7 @@ public class AuthService {
 
         if (passwordEncoder.matches(request.getPassword(), auth.getPassword())) {
             auth.setLastLoginDate(LocalDateTime.now());
+            authRepository.save(auth);
             return jwtUtil.generateToken(request.getUsername(), auth.getId());
         } else {
             throw new PasswordMismatchException("Geçersiz şifre.");
@@ -89,7 +90,10 @@ public class AuthService {
     }
 
     public AuthDto getInformationById(Long authId) {
-        Auth auth = authRepository.findById(authId).get();
-        return converter.convert(auth);
+        Optional<Auth> auth = authRepository.findById(authId);
+        if(auth.isEmpty()){
+            throw new RuntimeException("Not found");
+        }
+        return converter.convert(auth.get());
     }
 }

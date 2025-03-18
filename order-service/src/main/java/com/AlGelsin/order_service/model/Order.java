@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -15,8 +16,11 @@ public class Order {
     private String id;
 
     private String userId;
+    private String cartId;
     private BigDecimal totalPrice;
     private final LocalDate createdAt=LocalDate.now();
+    @Enumerated(EnumType.STRING)
+    private Statu statu;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "order")
     List<OrderItem> orderItemList = new ArrayList<>();
@@ -25,13 +29,19 @@ public class Order {
 
     }
 
-    public Order(String userId,BigDecimal totalPrice){
+    public Order(String userId,String cartId,BigDecimal totalPrice){
         this.userId = userId;
+        this.cartId = cartId;
         this.totalPrice = totalPrice;
+        this.statu = Statu.PENDING;
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getCartId() {
+        return cartId;
     }
 
     public String getUserId() {
@@ -48,5 +58,13 @@ public class Order {
 
     public List<OrderItem> getOrderItemList() {
         return orderItemList;
+    }
+
+    public Statu getStatu() {
+        return statu;
+    }
+
+    public void setStatu(Statu statu) {
+        this.statu = statu;
     }
 }

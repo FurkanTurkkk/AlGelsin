@@ -18,4 +18,34 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
+    public OrderItem() {
+    }
+
+    public OrderItem(String productId, int quantity, BigDecimal price, Order order) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+        this.order = order;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
 }

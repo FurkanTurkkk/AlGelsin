@@ -9,7 +9,8 @@ public class AuthDtoConverter {
 
     public AuthDto convert(Auth auth){
         return new AuthDto(
-
+                auth.getLastLoginDate(),
+                auth.getRegistrationDate()
         );
     }
 }

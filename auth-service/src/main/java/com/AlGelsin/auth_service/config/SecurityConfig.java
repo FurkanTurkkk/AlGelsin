@@ -17,7 +17,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf->csrf.disable()) // CSRF korumasını devre dışı bırak
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login").permitAll() // Kayıt ve giriş endpoint'lerine herkes erişebilir
+                        .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login","/api/v1/auth/**").permitAll() // Kayıt ve giriş endpoint'lerine herkes erişebilir
                         .anyRequest().authenticated() // Diğer tüm endpoint'ler için kimlik doğrulama gerekir
                 );
         return http.build();

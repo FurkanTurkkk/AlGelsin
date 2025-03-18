@@ -14,9 +14,8 @@ public class CartItemDtoConverter {
     }
 
     public CartItemDto convert(CartItem cartItem){
-        String productName = feignClientService.getProductNameByProductId(cartItem.getProductId());
         return new CartItemDto(
-                productName,
+                cartItem.getProductId(),
                 cartItem.getQuantity(),
                 cartItem.getPrice()
         );

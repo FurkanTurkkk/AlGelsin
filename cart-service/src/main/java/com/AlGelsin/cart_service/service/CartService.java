@@ -1,6 +1,7 @@
 package com.AlGelsin.cart_service.service;
 
 import com.AlGelsin.cart_service.converter.CartDtoConverter;
+import com.AlGelsin.cart_service.exception.CartNotFoundException;
 import com.AlGelsin.cart_service.model.Cart;
 import com.AlGelsin.cart_service.model.CartItem;
 import com.AlGelsin.cart_service.repository.CartRepository;
@@ -53,5 +54,15 @@ public class CartService {
             return converter.convert(cart.get());
         }
         throw new RuntimeException("You don't have any Cart");
+    }
+
+    public void deleteCartByAuthId(Long authId) {
+        String userId = feignClientService.getUserIdByAuthId(authId);
+        Optional<Cart> cart = cartRepository.findByUserId(userId);
+        if(cart.isEmpty()){
+            throw new CartNotFoundException("Cart could not found by user id : "+userId);
+        }else {
+            cartRepository.delete(cart.get());
+        }
     }
 }

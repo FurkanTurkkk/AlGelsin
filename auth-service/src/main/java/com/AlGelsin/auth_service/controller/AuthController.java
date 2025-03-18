@@ -28,7 +28,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<AuthDto> getInformationById(@RequestHeader("Auth-Id")Long authId){
         return ResponseEntity.ok(authService.getInformationById(authId));
     }
