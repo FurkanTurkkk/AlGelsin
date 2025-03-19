@@ -24,7 +24,7 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(
-            @RequestHeader(value = "Auth-Id", required = true) Long authId,
+            @RequestHeader("Auth-id") Long authId,
             @RequestBody UpdateUserRequestDto request) {
         userService.updateUser(authId,request);
 

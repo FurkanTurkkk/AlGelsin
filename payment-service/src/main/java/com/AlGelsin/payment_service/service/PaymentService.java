@@ -2,6 +2,7 @@ package com.AlGelsin.payment_service.service;
 
 import com.AlGelsin.payment_service.config.IyzicoConfig;
 import com.AlGelsin.payment_service.dto.PaymentRequestDto;
+import com.AlGelsin.payment_service.dto.PaymentResult;
 import com.AlGelsin.payment_service.util.FeignClientService;
 import com.iyzipay.model.*;
 import com.iyzipay.request.CreatePaymentRequest;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,9 @@ public class PaymentService {
         UserDto userDto = feignClientService.getUserDtoByAuthId(authId);
         AuthDto authDto = feignClientService.getAuthDtoByAuthId(authId);
         CartDto cartDto = feignClientService.getCartByAuthId(authId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         // Locale ve ödeme bilgilerini ayarla
         paymentRequest.setLocale(Locale.TR.getValue());
         paymentRequest.setConversationId("123456789");
@@ -64,12 +69,12 @@ public class PaymentService {
         buyer.setGsmNumber(userDto.getPhone());
         buyer.setEmail(userDto.getEmail());
         buyer.setIdentityNumber(userDto.getTc());
-        buyer.setLastLoginDate(authDto.getLastLoginDate().toString());
-        buyer.setRegistrationDate(authDto.getRegistrationDate().toString());
+        buyer.setLastLoginDate(authDto.getLastLoginDate().format(formatter));
+        buyer.setRegistrationDate(authDto.getRegistrationDate().format(formatter));
         buyer.setRegistrationAddress("-");
         buyer.setIp(userIp);
         buyer.setCity(requestDto.getBillingAddress().getCity());
-        buyer.setCity(requestDto.getBillingAddress().getCountry());
+        buyer.setCountry(requestDto.getBillingAddress().getCountry());
         buyer.setZipCode(requestDto.getBillingAddress().getZipCode());
         paymentRequest.setBuyer(buyer);
 
@@ -111,5 +116,27 @@ public class PaymentService {
         paymentRequest.setBillingAddress(billingAddress);
 
         return paymentRequest;
+    }
+
+    public PaymentResult processPayment(PaymentRequestDto requestDto, Long authId) {
+        CreatePaymentRequest paymentRequest = createPaymentRequestFromDto(requestDto, authId);
+        logger.info("Ödeme işlemi başlatılıyor. AuthId: {}", authId);
+
+        try {
+            // Iyzico API çağrısı yapılıyor.
+            Payment iyzicoPayment = Payment.create(paymentRequest,iyzicoConfig.options());
+
+            if ("SUCCESS".equalsIgnoreCase(iyzicoPayment.getStatus())) {
+                logger.info("Ödeme başarılı. Payment ID: {}", iyzicoPayment.getPaymentId());
+
+                return new PaymentResult(true, "Ödeme başarıyla gerçekleştirildi", iyzicoPayment.getPaymentId());
+            } else {
+                logger.error("Ödeme başarısız: {}", iyzicoPayment.getErrorMessage());
+                return new PaymentResult(false, "Ödeme başarısız: " + iyzicoPayment.getErrorMessage(), null);
+            }
+        } catch (Exception e) {
+            logger.error("Iyzico ödeme işlemi sırasında hata oluştu: ", e);
+            return new PaymentResult(false, "Ödeme işlemi sırasında hata oluştu", null);
+        }
     }
 }

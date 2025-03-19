@@ -23,6 +23,6 @@ public class PaymentController {
     public ResponseEntity<?> processPayment(@Valid @RequestBody PaymentRequestDto request,
                                                              @RequestHeader("Auth-Id")Long authId) {
         logger.info("Received payment request for order: {}");
-        return ResponseEntity.ok(paymentService.createPaymentRequestFromDto(request,authId));
+        return ResponseEntity.ok(paymentService.processPayment(request,authId));
     }
 }

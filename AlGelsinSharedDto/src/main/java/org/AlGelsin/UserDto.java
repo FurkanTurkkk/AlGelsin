@@ -13,19 +13,8 @@ public class UserDto {
     private String email;
     private String tc;
     private LocalDate birthday;
-    private String addressId;
 
     public UserDto() {
-    }
-
-    public UserDto(String id, Long authId, String name, String surname, String phone, String email, LocalDate birthday) {
-        this.id = id;
-        this.authId = authId;
-        this.name = name;
-        this.surname = surname;
-        this.phone = phone;
-        this.email = email;
-        this.birthday = birthday;
     }
 
     public UserDto(String id, Long authId,
@@ -34,8 +23,7 @@ public class UserDto {
                    String phone,
                    String email,
                    String tc,
-                   LocalDate birthday,
-                   String addressId) {
+                   LocalDate birthday) {
         this.id = id;
         this.authId = authId;
         this.name = name;
@@ -44,7 +32,6 @@ public class UserDto {
         this.email = email;
         this.tc = tc;
         this.birthday = birthday;
-        this.addressId = addressId;
     }
 
     public String getId() {
@@ -77,9 +64,5 @@ public class UserDto {
 
     public LocalDate getBirthday() {
         return birthday;
-    }
-
-    public String getAddressId() {
-        return addressId;
     }
 }

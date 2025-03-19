@@ -1,5 +1,6 @@
 package com.AlGelsin.auth_service.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -16,7 +17,9 @@ public class Auth {
     private String surname;
     private String username;
     private String password;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime registrationDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime LastLoginDate;
     private boolean isAdmin = false;
 

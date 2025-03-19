@@ -67,4 +67,15 @@ public class User {
         this.birthday = birthday;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTc(String tc) {
+        this.tc = tc;
+    }
+
+    public String getTc() {
+        return tc;
+    }
 }

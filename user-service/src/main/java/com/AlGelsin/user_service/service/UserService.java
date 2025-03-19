@@ -38,6 +38,7 @@ public class UserService {
         User user = checkByAuthIdForUpdateUser(authId);
         user.setBirthday(request.getBirthday());
         user.setPhone(request.getPhone());
+        user.setTc(request.getTc());
         userRepository.save(user);
         return converter.convert(user);
     }
