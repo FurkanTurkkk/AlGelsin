@@ -3,8 +3,10 @@ org/AlGelsin/CategoryDto.class
 org/AlGelsin/AddressDto.class
 org/AlGelsin/UserDto.class
 org/AlGelsin/OrderItemDto.class
+org/AlGelsin/StockUpdateEvent.class
 org/AlGelsin/ProductDto.class
 org/AlGelsin/AuthDto.class
 org/AlGelsin/StockDto.class
+org/AlGelsin/PaymentEvent.class
 org/AlGelsin/OrderDto.class
 org/AlGelsin/CartDto.class

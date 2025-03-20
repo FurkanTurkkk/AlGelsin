@@ -5,6 +5,7 @@ import com.AlGelsin.cart_service.model.CartItem;
 import com.AlGelsin.cart_service.repository.CartItemRepository;
 import com.AlGelsin.cart_service.util.FeignClientService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -23,12 +24,14 @@ public class CartItemService {
         this.feignClientService = feignClientService;
     }
 
+    @Transactional
     public void addCartItem(Long authId,String productId,int quantity) {
         String userId = feignClientService.getUserIdByAuthId(authId);
         BigDecimal price = calculateCartItemPrice(productId,quantity);
         Cart cart = cartService.createOrGetCart(userId,price);
         Optional<CartItem> cartItem = cartItemRepository.findByCartAndProductId(cart,productId);
         if(cartItem.isPresent()){
+            feignClientService.checkStock(productId,quantity);
             CartItem existingCartItem = cartItem.get();
             existingCartItem.updateQuantity(existingCartItem.getQuantity()+quantity);
             BigDecimal updatedPrice = calculateCartItemPrice(productId,existingCartItem.getQuantity());
@@ -37,6 +40,7 @@ public class CartItemService {
             cartService.calculateCartPrice(cart);
             return;
         }else {
+            feignClientService.checkStock(productId,quantity);
             CartItem createdCartItem = new CartItem(
                     productId,
                     quantity,

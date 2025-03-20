@@ -1,6 +1,7 @@
 package com.AlGelsin.payment_service.service;
 
 import com.AlGelsin.payment_service.config.IyzicoConfig;
+import com.AlGelsin.payment_service.config.PaymentRabbitConfig;
 import com.AlGelsin.payment_service.dto.PaymentRequestDto;
 import com.AlGelsin.payment_service.dto.PaymentResult;
 import com.AlGelsin.payment_service.util.FeignClientService;
@@ -9,6 +10,7 @@ import com.iyzipay.request.CreatePaymentRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.AlGelsin.*;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 
@@ -19,15 +21,17 @@ import java.util.List;
 
 @Service
 public class PaymentService {
+    private final static Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     private final IyzicoConfig iyzicoConfig;
-    private final static Logger logger = LoggerFactory.getLogger(PaymentService.class);
+    private final RabbitTemplate rabbitTemplate;
     private final HttpServletRequest request;
     private final FeignClientService feignClientService;
 
 
-    public PaymentService(IyzicoConfig iyzicoConfig, HttpServletRequest request, FeignClientService feignClientService) {
+    public PaymentService(IyzicoConfig iyzicoConfig, RabbitTemplate rabbitTemplate, HttpServletRequest request, FeignClientService feignClientService) {
         this.iyzicoConfig = iyzicoConfig;
+        this.rabbitTemplate = rabbitTemplate;
         this.request = request;
         this.feignClientService = feignClientService;
     }
@@ -42,7 +46,6 @@ public class PaymentService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        // Locale ve ödeme bilgilerini ayarla
         paymentRequest.setLocale(Locale.TR.getValue());
         paymentRequest.setConversationId("123456789");
         paymentRequest.setPrice(cartDto.getTotalPrice());
@@ -78,10 +81,6 @@ public class PaymentService {
         buyer.setZipCode(requestDto.getBillingAddress().getZipCode());
         paymentRequest.setBuyer(buyer);
 
-
-        // Sepet ürünlerini (order items) dönüştür
-
-
         List<BasketItem> basketItems = new ArrayList<>();
         List<CartItemDto> cartItemDtoList = cartDto.getCartItemDtoList();
         for (CartItemDto cartItemDto : cartItemDtoList) {
@@ -95,7 +94,7 @@ public class PaymentService {
         }
         paymentRequest.setBasketItems(basketItems);
 
-        // Teslimat ve fatura adreslerini ayarla
+
         AddressDto shippingAddressDto = requestDto.getShippingAddress();
         Address shippingAddress = new Address();
         shippingAddress.setContactName(userDto.getName());
@@ -123,15 +122,23 @@ public class PaymentService {
         logger.info("Ödeme işlemi başlatılıyor. AuthId: {}", authId);
 
         try {
-            // Iyzico API çağrısı yapılıyor.
+
             Payment iyzicoPayment = Payment.create(paymentRequest,iyzicoConfig.options());
 
             if ("SUCCESS".equalsIgnoreCase(iyzicoPayment.getStatus())) {
                 logger.info("Ödeme başarılı. Payment ID: {}", iyzicoPayment.getPaymentId());
 
+                rabbitTemplate.convertAndSend(PaymentRabbitConfig.EXCHANGE_NAME,
+                        PaymentRabbitConfig.ROUTING_KEY_COMPLETED,
+                        authId);
+
                 return new PaymentResult(true, "Ödeme başarıyla gerçekleştirildi", iyzicoPayment.getPaymentId());
             } else {
                 logger.error("Ödeme başarısız: {}", iyzicoPayment.getErrorMessage());
+
+                rabbitTemplate.convertAndSend(PaymentRabbitConfig.EXCHANGE_NAME,
+                        PaymentRabbitConfig.ROUTING_KEY_CANCELED,
+                        authId);
                 return new PaymentResult(false, "Ödeme başarısız: " + iyzicoPayment.getErrorMessage(), null);
             }
         } catch (Exception e) {

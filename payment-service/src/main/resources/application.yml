@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: payment-service
+  rabbitmq:
+      host: localhost      # Docker kullanmıyorsanız, RabbitMQ localhost üzerinde çalışıyor.
+      port: 5672
+      username: guest
+      password: guest
 
 iyzico:
   api:

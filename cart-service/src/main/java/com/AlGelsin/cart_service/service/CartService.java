@@ -1,5 +1,6 @@
 package com.AlGelsin.cart_service.service;
 
+import com.AlGelsin.cart_service.config.CartRabbitConfig;
 import com.AlGelsin.cart_service.converter.CartDtoConverter;
 import com.AlGelsin.cart_service.exception.CartNotFoundException;
 import com.AlGelsin.cart_service.model.Cart;
@@ -7,6 +8,7 @@ import com.AlGelsin.cart_service.model.CartItem;
 import com.AlGelsin.cart_service.repository.CartRepository;
 import com.AlGelsin.cart_service.util.FeignClientService;
 import org.AlGelsin.CartDto;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -56,6 +58,7 @@ public class CartService {
         throw new RuntimeException("You don't have any Cart");
     }
 
+    @RabbitListener(queues = CartRabbitConfig.CART_QUEUE)
     public void deleteCartByAuthId(Long authId) {
         String userId = feignClientService.getUserIdByAuthId(authId);
         Optional<Cart> cart = cartRepository.findByUserId(userId);

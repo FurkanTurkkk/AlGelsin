@@ -30,4 +30,10 @@ public class StockController {
     public ResponseEntity<String> updateStock(@RequestBody UpdateStockRequestDto request){
         return ResponseEntity.ok(stockService.updateStock(request));
     }
+
+    @GetMapping("/check")
+    public void checkStockOfProductForAddToCart(@RequestParam String productId,
+                                                @RequestParam int quantity){
+        stockService.decreaseQuantity(productId,quantity);
+    }
 }
