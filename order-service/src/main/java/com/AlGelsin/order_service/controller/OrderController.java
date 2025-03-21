@@ -1,7 +1,6 @@
 package com.AlGelsin.order_service.controller;
 
 import com.AlGelsin.order_service.service.OrderService;
-import org.AlGelsin.OrderDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class PaymentRabbitConfig {
 
     public static final String EXCHANGE_NAME = "common-exchange";
+    public static final String ROUTING_KEY_INCREASE_STOCK = "increase-stock";
     public static final String ROUTING_KEY_COMPLETED = "order.completed";
     public static final String ROUTING_KEY_CANCELED = "order.canceled";
     public static final String ROUTING_KEY_NOTIFICATION = "notification";

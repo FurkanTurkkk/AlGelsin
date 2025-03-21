@@ -1,4 +1,3 @@
-org/AlGelsin/CartItemDto.class
 org/AlGelsin/CategoryDto.class
 org/AlGelsin/AddressDto.class
 org/AlGelsin/UserDto.class
@@ -6,7 +5,9 @@ org/AlGelsin/OrderItemDto.class
 org/AlGelsin/StockUpdateEvent.class
 org/AlGelsin/ProductDto.class
 org/AlGelsin/AuthDto.class
-org/AlGelsin/StockDto.class
-org/AlGelsin/PaymentEvent.class
+org/AlGelsin/SendMailDto.class
+org/AlGelsin/IncreaseStockEventDto.class
 org/AlGelsin/OrderDto.class
+org/AlGelsin/CartItemDto.class
+org/AlGelsin/StockDto.class
 org/AlGelsin/CartDto.class

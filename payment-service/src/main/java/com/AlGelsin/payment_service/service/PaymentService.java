@@ -57,12 +57,12 @@ public class PaymentService {
 
 
         PaymentCard paymentCard = new PaymentCard();
-        paymentCard.setCardHolderName("John Doe");
-        paymentCard.setCardNumber("5528790000000008");
-        paymentCard.setExpireMonth("12");
-        paymentCard.setExpireYear("2030");
-        paymentCard.setCvc("123");
-        paymentCard.setRegisterCard(0);
+        paymentCard.setCardHolderName(requestDto.getCartHolderName());
+        paymentCard.setCardNumber(requestDto.getCardNumber());
+        paymentCard.setExpireMonth(requestDto.getExpireMonth());
+        paymentCard.setExpireYear(requestDto.getExpireYear());
+        paymentCard.setCvc(requestDto.getCvc());
+        paymentCard.setRegisterCard(requestDto.getRegisterCard());
         paymentRequest.setPaymentCard(paymentCard);
 
         Buyer buyer = new Buyer();
@@ -120,6 +120,7 @@ public class PaymentService {
     public PaymentResult processPayment(PaymentRequestDto requestDto, Long authId) {
         CreatePaymentRequest paymentRequest = createPaymentRequestFromDto(requestDto, authId);
         logger.info("Ödeme işlemi başlatılıyor. AuthId: {}", authId);
+        UserDto userDto = feignClientService.getUserDtoByAuthId(authId);
 
         try {
 
@@ -127,14 +128,29 @@ public class PaymentService {
 
             if ("SUCCESS".equalsIgnoreCase(iyzicoPayment.getStatus())) {
                 logger.info("Ödeme başarılı. Payment ID: {}", iyzicoPayment.getPaymentId());
+                SendMailDto mail = new SendMailDto(
+                        userDto.getEmail(),
+                        "Order",
+                        "Order successfully created"
+                );
 
                 rabbitTemplate.convertAndSend(PaymentRabbitConfig.EXCHANGE_NAME,
                         PaymentRabbitConfig.ROUTING_KEY_COMPLETED,
                         authId);
 
+                rabbitTemplate.convertAndSend(PaymentRabbitConfig.EXCHANGE_NAME,
+                        PaymentRabbitConfig.ROUTING_KEY_NOTIFICATION,
+                        mail);
+
                 return new PaymentResult(true, "Ödeme başarıyla gerçekleştirildi", iyzicoPayment.getPaymentId());
             } else {
                 logger.error("Ödeme başarısız: {}", iyzicoPayment.getErrorMessage());
+                CartDto cartDto = feignClientService.getCartByAuthId(authId);
+                IncreaseStockEventDto stockEventDto = new IncreaseStockEventDto(cartDto,authId);
+
+                rabbitTemplate.convertAndSend(PaymentRabbitConfig.EXCHANGE_NAME,
+                        PaymentRabbitConfig.ROUTING_KEY_INCREASE_STOCK,
+                        stockEventDto);
 
                 rabbitTemplate.convertAndSend(PaymentRabbitConfig.EXCHANGE_NAME,
                         PaymentRabbitConfig.ROUTING_KEY_CANCELED,

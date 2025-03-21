@@ -1,0 +1,22 @@
+server:
+  port: 8090
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  application:
+    name: notification-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: fuurkan.tuurk@gmail.com
+    password: oqtzyrrbubpnfzje
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

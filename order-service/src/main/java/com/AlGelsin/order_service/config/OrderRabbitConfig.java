@@ -19,7 +19,7 @@ public class OrderRabbitConfig {
     public static final String ROUTING_KEY_CANCELED = "order.canceled";
 
     @Bean
-    public DirectExchange paymentExchange() {
+    public DirectExchange commonExchange() {
         return new DirectExchange(EXCHANGE_NAME);
     }
 
